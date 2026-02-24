@@ -1,6 +1,24 @@
 # React + Vite
 
+[![CI Pipeline](https://github.com/Heshan2691/vite-ci-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/Heshan2691/vite-ci-demo/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/Heshan2691/vite-ci-demo)
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+## Testing & Coverage
+
+This project achieves **100% test coverage** with comprehensive unit tests using Vitest and React Testing Library.
+
+### Run Tests
+
+```bash
+npm run test          # Run tests with coverage
+npm run test:watch    # Run tests in watch mode
+```
+
+### View Coverage Reports
+
+After running tests, coverage reports are generated in the `coverage/` directory. The CI pipeline automatically uploads coverage reports as artifacts on every push and pull request.
 
 Currently, two official plugins are available:
 

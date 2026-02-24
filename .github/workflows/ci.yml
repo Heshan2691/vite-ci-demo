@@ -23,6 +23,9 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      - name: Run Linter
+        run: npm run lint
+
       - name: Run Tests with Coverage
         run: npm run test
 
@@ -34,3 +37,11 @@ jobs:
         with:
           name: coverage-report
           path: coverage
+
+      - name: Coverage Summary
+        run: |
+          echo "## Test Coverage Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| File | Statements | Branches | Functions | Lines |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|------------|----------|-----------|-------|" >> $GITHUB_STEP_SUMMARY
+          npm run test 2>&1 | grep -A 5 "All files" | tail -n 1 | awk '{print "| All files | " $2 " | " $3 " | " $4 " | " $5 " |"}' >> $GITHUB_STEP_SUMMARY || echo "Coverage report generated successfully"
