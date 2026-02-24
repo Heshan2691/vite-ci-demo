@@ -19,10 +19,10 @@ describe("App Component", () => {
     const user = userEvent.setup();
     render(<App />);
     const button = screen.getByRole("button");
-    
+
     await user.click(button);
     expect(button).toHaveTextContent("count is 1");
-    
+
     await user.click(button);
     expect(button).toHaveTextContent("count is 2");
   });
@@ -31,7 +31,7 @@ describe("App Component", () => {
     render(<App />);
     const viteLogo = screen.getByAltText("Vite logo");
     const reactLogo = screen.getByAltText("React logo");
-    
+
     expect(viteLogo).toBeInTheDocument();
     expect(reactLogo).toBeInTheDocument();
   });
@@ -40,7 +40,7 @@ describe("App Component", () => {
     render(<App />);
     const viteLink = screen.getByRole("link", { name: /vite logo/i });
     const reactLink = screen.getByRole("link", { name: /react logo/i });
-    
+
     expect(viteLink).toHaveAttribute("href", "https://vite.dev");
     expect(reactLink).toHaveAttribute("href", "https://react.dev");
   });
