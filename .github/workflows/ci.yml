@@ -38,19 +38,23 @@ jobs:
           name: coverage-report
           path: coverage
 
-      - name: Coverage Summary
+  docker-build-and-push:
+    needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Get version from package.json
+        id: package_version
         run: |
-          echo "## Test Coverage Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| File | Statements | Branches | Functions | Lines |" >> $GITHUB_STEP_SUMMARY
-          echo "|------|------------|----------|-----------|-------|" >> $GITHUB_STEP_SUMMARY
-          npm run test 2>&1 | grep -A 5 "All files" | tail -n 1 | awk '{print "| All files | " $2 " | " $3 " | " $4 " | " $5 " |"}' >> $GITHUB_STEP_SUMMARY || echo "Coverage report generated successfully"
+          VERSION=$(node -p "require('./package.json').version")
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
-      - name: Build Docker Image
-        run: docker build -t vite-ci-demo:latest .
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -59,6 +63,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and Push Docker Image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/vite-ci-demo:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/vite-ci-demo:latest
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/vite-ci-demo:${{ steps.package_version.outputs.VERSION }}
+            ${{ secrets.DOCKER_USERNAME }}/vite-ci-demo:latest
+            ${{ secrets.DOCKER_USERNAME }}/vite-ci-demo:${{ github.sha }}
