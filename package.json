@@ -1,11 +1,7 @@
 {
   "name": "vite-ci-demo",
   "private": true,
-<<<<<<< HEAD
   "version": "1.0.0",
-=======
-  "version": "0.0.2",
->>>>>>> 11f9e68a6ea0b77490e2ef79bffba66c7d7e979d
   "type": "module",
   "scripts": {
     "dev": "vite",

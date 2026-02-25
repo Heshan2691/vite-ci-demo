@@ -3,9 +3,9 @@ import userEvent from "@testing-library/user-event";
 import App from "./App";
 
 describe("App Component", () => {
-  test("renders Vite text", () => {
+  test("renders heading", () => {
     render(<App />);
-    const textElement = screen.getByRole("heading", { name: /vite \+ react/i });
+    const textElement = screen.getByRole("heading", { name: /hello/i });
     expect(textElement).toBeInTheDocument();
   });
 
