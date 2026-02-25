@@ -102,3 +102,12 @@ jobs:
             ${{ secrets.DOCKER_USERNAME }}/vite-ci-demo:${{ steps.bump_version.outputs.VERSION }}
             ${{ secrets.DOCKER_USERNAME }}/vite-ci-demo:latest
             ${{ secrets.DOCKER_USERNAME }}/vite-ci-demo:${{ github.sha }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.bump_version.outputs.VERSION }}
+          name: Release v${{ steps.bump_version.outputs.VERSION }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
