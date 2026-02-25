@@ -45,3 +45,9 @@ jobs:
           echo "| File | Statements | Branches | Functions | Lines |" >> $GITHUB_STEP_SUMMARY
           echo "|------|------------|----------|-----------|-------|" >> $GITHUB_STEP_SUMMARY
           npm run test 2>&1 | grep -A 5 "All files" | tail -n 1 | awk '{print "| All files | " $2 " | " $3 " | " $4 " | " $5 " |"}' >> $GITHUB_STEP_SUMMARY || echo "Coverage report generated successfully"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Image
+        run: docker build -t vite-ci-demo:latest .
