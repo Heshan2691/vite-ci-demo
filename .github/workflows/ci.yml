@@ -46,12 +46,26 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get version from package.json
-        id: package_version
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # 🔥 Auto bump PATCH version
+      - name: Bump Version
+        id: bump_version
         run: |
+          npm version patch -m "ci: bump version to %s [skip ci]"
           VERSION=$(node -p "require('./package.json').version")
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Push Version Commit and Tag
+        run: |
+          git push
+          git push --tags
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -67,6 +81,6 @@ jobs:
         with:
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/vite-ci-demo:${{ steps.package_version.outputs.VERSION }}
+            ${{ secrets.DOCKER_USERNAME }}/vite-ci-demo:${{ steps.bump_version.outputs.VERSION }}
             ${{ secrets.DOCKER_USERNAME }}/vite-ci-demo:latest
             ${{ secrets.DOCKER_USERNAME }}/vite-ci-demo:${{ github.sha }}
