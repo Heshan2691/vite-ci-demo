@@ -80,6 +80,16 @@ jobs:
           VERSION=$(node -p "require('./package.json').version")
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
+      - name: Generate CHANGELOG
+        run: |
+          npm run changelog
+
+      - name: Commit CHANGELOG
+        run: |
+          git add CHANGELOG.md
+          git commit -m "docs: update changelog [skip ci]" || echo "No changelog changes"
+          git push
+
       - name: Push Version Commit and Tag
         run: |
           git push
